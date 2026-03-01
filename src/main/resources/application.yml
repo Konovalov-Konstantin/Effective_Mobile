@@ -20,3 +20,7 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:db/migration/db.changelog-master.yaml
+
+jwt:
+  secret: Dvwrrga53LE3kfMeMF2qEfm3k3mgkwmGFe
+  expiration: 3600000
