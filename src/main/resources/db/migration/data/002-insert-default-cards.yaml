@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: developer
+      changes:
+        - insert:
+            tableName: cards
+            columns:
+              - column:
+                  name: card_number
+                  value: '3000 6820 4938 5746'
+              - column:
+                  name: expire_date
+                  value: '2027-03-01 18:16:51.105'
+              - column:
+                  name: balance
+                  value: '1000.0'
+              - column:
+                  name: status
+                  value: 'ACTIVE'
+              - column:
+                  name: user_id
+                  value: '2'
+        - insert:
+            tableName: cards
+            columns:
+              - column:
+                  name: card_number
+                  value: '1905 6965 5606 7746'
+              - column:
+                  name: expire_date
+                  value: '2028-10-05 18:16:51.105'
+              - column:
+                  name: balance
+                  value: '0.0'
+              - column:
+                  name: status
+                  value: 'ACTIVE'
+              - column:
+                  name: user_id
+                  value: '2'

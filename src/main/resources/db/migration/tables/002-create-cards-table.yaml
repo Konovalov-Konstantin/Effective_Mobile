@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: developer
+      changes:
+        - createTable:
+            tableName: cards
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: card_number
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: expire_date
+                  type: timestamp
+              - column:
+                  name: balance
+                  type: decimal(19,2)
+                  defaultValueNumeric: 0.00
+              - column:
+                  name: status
+                  type: varchar(50)
+                  defaultValue: 'ACTIVE'
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_cards_users
+                    references: users(id)
+                    nullable: true

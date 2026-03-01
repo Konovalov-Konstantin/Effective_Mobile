@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: developer
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: 'admin'
+              - column:
+                  name: password
+                  value: '$2a$12$LsCviesxuKxf.tJx9Ck/Oe88XQQmxFpoZef.sMyX/TBy9OOAAsZWe'
+              - column:
+                  name: role
+                  value: 'ADMIN'
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: 'user'
+              - column:
+                  name: password
+                  value: '$2a$12$.QxzdpkpksWiNP9w4yUH3uE.yPXPM4bd9dV8IM034L2a7.ZTLU7iS'
+              - column:
+                  name: role
+                  value: 'USER'
