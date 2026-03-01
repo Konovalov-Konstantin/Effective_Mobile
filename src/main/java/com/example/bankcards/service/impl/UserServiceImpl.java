@@ -4,6 +4,7 @@ import com.example.bankcards.dto.CreateOrUpdateUserRequest;
 import com.example.bankcards.dto.UserDto;
 import com.example.bankcards.entity.Role;
 import com.example.bankcards.entity.User;
+import com.example.bankcards.exception.UserNotFoundException;
 import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.service.CardService;
 import com.example.bankcards.service.UserService;
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public UserDto getUserById(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Пользователь с id %d не существует", userId)));
+                .orElseThrow(() -> new UserNotFoundException(String.format("Пользователь с id %d не существует", userId)));
         return toUserDto(user);
     }
 
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto updateUser(Long userId, CreateOrUpdateUserRequest request) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Пользователь с id=%d не существует", userId)));
+                .orElseThrow(() -> new UserNotFoundException(String.format("Пользователь с id=%d не существует", userId)));
 
         if (request.getUsername() != null) {
             user.setUsername(request.getUsername());
@@ -70,7 +71,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Пользователь с id=%d не существует", userId)));
+                .orElseThrow(() -> new UserNotFoundException(String.format("Пользователь с id=%d не существует", userId)));
         userRepository.delete(user);
     }
 

@@ -8,12 +8,12 @@ import com.example.bankcards.entity.User;
 import com.example.bankcards.exception.AccessDeniedException;
 import com.example.bankcards.exception.CardNotFoundException;
 import com.example.bankcards.exception.InsufficientFundsException;
+import com.example.bankcards.exception.UserNotFoundException;
 import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.service.CardService;
 import com.example.bankcards.util.Mapper;
 import com.example.bankcards.util.Util;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -52,7 +52,7 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public CardDto createCard(Long userId) {
         User owner = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Клиент %d не найден", userId)));
+                .orElseThrow(() -> new UserNotFoundException(String.format("Клиент %d не найден", userId)));
 
         Card card = Card.builder()
                 .cardNumber(Util.generateCardNumber())
@@ -84,7 +84,7 @@ public class CardServiceImpl implements CardService {
             throw new AccessDeniedException("Клиент предъявил чужую карту");
         }
         if (fromCard.getStatus() != ACTIVE || toCard.getStatus() != ACTIVE) {
-            throw new IllegalStateException("Карты должны быть активными");
+            throw new AccessDeniedException("Карты должны быть активными");
         }
         if (fromCard.getBalance().compareTo(request.getAmount()) < 0) {
             throw new InsufficientFundsException(String.format("На карте %s недостаточно средств",
@@ -102,7 +102,7 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public CardDto changeStatus(String cardNumber, CardStatus newStatus) {
         Card card = cardRepository.findByCardNumber(cardNumber)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Карта %s не найдена",
+                .orElseThrow(() -> new CardNotFoundException(String.format("Карта %s не найдена",
                         Util.getMaskerCardNumber(cardNumber))));
         card.setStatus(newStatus);
         return Mapper.toCardDto(cardRepository.save(card));
@@ -112,7 +112,7 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public void deleteCard(String cardNumber) {
         Card card = cardRepository.findByCardNumber(cardNumber)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Карта %s не найдена",
+                .orElseThrow(() -> new CardNotFoundException(String.format("Карта %s не найдена",
                         Util.getMaskerCardNumber(cardNumber))));
         cardRepository.delete(card);
     }
@@ -120,7 +120,7 @@ public class CardServiceImpl implements CardService {
     private User getCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Клиент %s не найден", username)));
+                .orElseThrow(() -> new UserNotFoundException(String.format("Клиент %s не найден", username)));
     }
 
     private boolean isAdmin(User currentUser) {
